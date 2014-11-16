@@ -1,6 +1,9 @@
 package corendonlms.view;
 
+import corendonlms.connectivity.UserManager;
 import corendonlms.main.CorendonLMS;
+import corendonlms.main.MiscUtil;
+import corendonlms.model.UserRoles;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -88,7 +91,11 @@ public class Login extends JPanel implements ActionListener
     {
         if (evt.getSource() == loginButton)
         {
-            //TODO: Validate credentials
+            UserRoles role = UserManager.getUserRole(
+                    usernameTextField.getText(), passwordField.getPassword());
+
+            MiscUtil.showMessage(String.format("Signing in was %ssuccesful!\n"
+                    + "User role: %s", (role == UserRoles.UNAUTHORIZED ? "not " : ""), role));
         }
     }
 }

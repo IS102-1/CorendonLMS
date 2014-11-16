@@ -1,5 +1,6 @@
 package corendonlms.main;
 
+import corendonlms.connectivity.DbManager;
 import corendonlms.view.Login;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -15,15 +16,14 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
- *
+ * Defines the application's main entry point
+ * 
  * @author Emile Pels
  */
 public class CorendonLMS
 {
-    private static final CorendonLMS APPLICATION = new CorendonLMS();
-
     //The title to show for the main frame
-    private static final String APPLICATION_NAME = "Corendom LMS";
+    public static final String APPLICATION_NAME = "Corendom LMS";
     
     //The application's default background - Corendon red
     public static final Color DEFAULT_BACKGROUND = new Color(156, 10, 13);
@@ -31,6 +31,8 @@ public class CorendonLMS
     //The applicatin's default forecolor (for text etc.)
     public static final Color DEFAULT_FORECOLOR = Color.WHITE;
 
+    private static final CorendonLMS APPLICATION = new CorendonLMS();
+    
     //The placeholder frame's default size
     private static final Dimension FRAME_SIZE = new Dimension(750, 600);
     
@@ -102,7 +104,7 @@ public class CorendonLMS
         mainFrame.setVisible(true);
     }
 
-    private void displayPanel(JPanel panel)
+    public void displayPanel(JPanel panel)
     {
         Container pane = mainFrame.getContentPane();
 
@@ -120,6 +122,7 @@ public class CorendonLMS
     public static void main(String[] args)
     {
         final CorendonLMS application = getInstance();
+        DbManager.connect();
 
         SwingUtilities.invokeLater(new Runnable()
         {
