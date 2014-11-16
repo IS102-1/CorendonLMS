@@ -15,59 +15,80 @@ import javax.swing.JTextField;
  */
 public class Login extends JPanel implements ActionListener
 {
-    private static final int HORIZONTAL_MARGIN = 20;
-    
-    private static final int TEXTFIELD_HEIGHT = 20;
-    private static final int TEXTFIELD_WIDTH = 200;
-    
-    private static final int VERTICAL_MARGIN = 20;
-    private static final int VERTICAL_OFFSET = TEXTFIELD_HEIGHT + 10;
-    
-    private JButton loginButton;
-    private JPasswordField passwordField;
+
     private JTextField usernameTextField;
-    
+    private JPasswordField passwordField;
+    private JButton loginButton;
+
     public Login()
     {
-        setLayout(null);
         setBackground(CorendonLMS.DEFAULT_BACKGROUND);
-                
-        packPanel();
+
+        initComponents();
     }
-    
-    private void packPanel()
+
+    /**
+     * Packs the UI elements on the panel and adds actionlisteners where
+     * appropriate
+     */
+    private void initComponents()
     {
-        JLabel usernameLabel = new JLabel("Username:");
-        usernameLabel.setBounds(HORIZONTAL_MARGIN, VERTICAL_MARGIN + 0 * VERTICAL_OFFSET, 100, 22);
-        usernameLabel.setForeground(CorendonLMS.DEFAULT_FORECOLOR);
-        
+        JLabel userLabel = new JLabel("Username:");
+        userLabel.setForeground(CorendonLMS.DEFAULT_FORECOLOR);
+
+        JLabel passLabel = new JLabel("Password:");
+        passLabel.setForeground(CorendonLMS.DEFAULT_FORECOLOR);
+
         usernameTextField = new JTextField();
-        usernameTextField.setBounds(HORIZONTAL_MARGIN, VERTICAL_MARGIN + 1 * VERTICAL_OFFSET, 
-                TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT);
-        
-        JLabel passwordLabel = new JLabel("Password:");
-        passwordLabel.setBounds(HORIZONTAL_MARGIN, VERTICAL_MARGIN + 2 * VERTICAL_OFFSET, 100, 22);
-        passwordLabel.setForeground(CorendonLMS.DEFAULT_FORECOLOR);
-        
         passwordField = new JPasswordField();
-        passwordField.setBounds(HORIZONTAL_MARGIN, VERTICAL_MARGIN + 3 * VERTICAL_OFFSET, 
-                TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT);
-        
+
         loginButton = new JButton("Log in");
-        loginButton.setBounds(HORIZONTAL_MARGIN, VERTICAL_MARGIN + 4 * VERTICAL_OFFSET + 20, 
-                TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT);
         loginButton.addActionListener(this);
-        
-        add(usernameLabel);
-        add(usernameTextField);
-        add(passwordLabel);
-        add(passwordField);
-        add(loginButton);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        setLayout(layout);
+
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(usernameTextField)
+                                .addComponent(passwordField)
+                                .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(userLabel)
+                                                .addComponent(passLabel))
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
+                        .addContainerGap())
+        );
+
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(userLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(usernameTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(passLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(loginButton)
+                        .addContainerGap(126, Short.MAX_VALUE))
+        );
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent evt)
     {
-        //TODO: Validate credentials
+        if (evt.getSource() == loginButton)
+        {
+            //TODO: Validate credentials
+        }
     }
 }
