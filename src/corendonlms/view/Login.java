@@ -25,7 +25,7 @@ public class Login extends JPanel implements ActionListener
 
     public Login()
     {
-        setBackground(CorendonLMS.DEFAULT_BACKGROUND);
+        setBackground(CorendonLMS.DEFAULT_BACKCOLOR);
 
         initComponents();
     }
