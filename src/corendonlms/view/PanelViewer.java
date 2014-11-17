@@ -17,14 +17,20 @@ import javax.swing.JPanel;
  */
 public class PanelViewer extends JFrame
 {
+
     private static final String PATH_SEPERATOR = File.separator;
     private static final String LOGO_FILENAME = "resources" + PATH_SEPERATOR + "CorendonLogo.png";
     private static final ImageLabel CORENDON_LOGO = new ImageLabel(LOGO_FILENAME);
 
+    /**
+     * Initializes the frame and adds a window listener to dispose of the frame
+     * when it is closed by the user
+     */
     public PanelViewer()
     {
         //Set the frame's title and size
         super(CorendonLMS.APPLICATION_NAME);
+
         setBackground(CorendonLMS.DEFAULT_BACKCOLOR);
         setSize(CorendonLMS.FRAME_SIZE);
 
@@ -64,14 +70,16 @@ public class PanelViewer extends JFrame
         constraint.fill = GridBagConstraints.BOTH;
         constraint.weightx = 1;
         constraint.weighty = 1;
-
+        
         ImageLabel logo = CORENDON_LOGO;
-
+        
         //Dock logo to top of the frame
+        constraint.gridy = 1;
         constraint.anchor = GridBagConstraints.NORTH;
         gridBag.setConstraints(logo, constraint);
 
         //Dock panel to bottom of the frame
+        constraint.gridy = 2;
         constraint.anchor = GridBagConstraints.SOUTH;
         gridBag.setConstraints(panel, constraint);
 
@@ -82,7 +90,7 @@ public class PanelViewer extends JFrame
 
         pane.revalidate();
         pane.repaint();
-        
+
         //Ensure the frame is visible
         if (!isVisible())
         {
