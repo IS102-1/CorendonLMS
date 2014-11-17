@@ -1,8 +1,10 @@
 package corendonlms.main;
 
+import corendonlms.connectivity.CustomerManager;
 import corendonlms.connectivity.DbManager;
-import corendonlms.view.PanelViewer;
+import corendonlms.model.UserAccount;
 import corendonlms.view.Login;
+import corendonlms.view.PanelViewer;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.SwingUtilities;
@@ -15,21 +17,31 @@ import javax.swing.SwingUtilities;
 public class CorendonLMS
 {
 
-    //The title to show for the main frame
+    /**
+     * The title to show for the main frame
+     */
     public static final String APPLICATION_NAME = "Corendom LMS";
 
-    //The application's default background - Corendon red
+    /**
+     * The application's default background
+     */
     public static final Color DEFAULT_BACKCOLOR = new Color(156, 10, 13);
 
-    //The applicatin's default forecolor (for text etc.)
+    /**
+     * The applicatin's default forecolor (for text, borders etc.)
+     */
     public static final Color DEFAULT_FORECOLOR = Color.WHITE;
-    
-    //The placeholder frame's default size
+
+    /**
+     * The placeholder frame's default size
+     */
     public static final Dimension FRAME_SIZE = new Dimension(750, 600);
 
-    //Represents the application's main window
+    /**
+     * Represents the application's main window
+     */
     public static final PanelViewer PANEL_VIEWER = new PanelViewer();
-    
+
     //Represents the current instance of the application
     private static final CorendonLMS APPLICATION = new CorendonLMS();
 
@@ -40,6 +52,12 @@ public class CorendonLMS
     private static final String LOOK_AND_FEEL = "Nimbus";
 
     /**
+     * Keeps record of the current user, for purposes including permissions and
+     * logging
+     */
+    public static UserAccount currentUser;
+
+    /**
      * Gets the instance of the currently executing application
      *
      * @return The instance of the currently executing application
@@ -48,7 +66,7 @@ public class CorendonLMS
     {
         return APPLICATION;
     }
-    
+
     /**
      * The application's main entry point. Creates an instance, connects to the
      * underlaying database and shows the login panel0
@@ -59,12 +77,12 @@ public class CorendonLMS
     {
         System.out.printf("Starting %s\tCurrent version: %s\n",
                 APPLICATION_NAME, CURRENT_VERSION);
-        
-        MiscUtil.setLookAndFeel(LOOK_AND_FEEL);
 
+        MiscUtil.setLookAndFeel(LOOK_AND_FEEL);
+        
         //Open the connection to the database
         DbManager.connect();
-
+        
         SwingUtilities.invokeLater(new Runnable()
         {
             @Override

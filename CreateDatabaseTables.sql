@@ -1,0 +1,18 @@
+/*
+*	Vergeet niet de constants in de DbManager class aan te passen.
+*	Sla daar je MySQL username en password op, net als je database naam (default: LMS_DB)
+*/
+
+CREATE TABLE users(
+ user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+ username VARCHAR(15) NOT NULL UNIQUE,
+ password VARCHAR(25) NOT NULL,
+ user_role VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE customers(
+name VARCHAR(50) NOT NULL,
+address VARCHAR(75) NOT NULL,
+email_address VARCHAR(50),
+phone_number VARCHAR(25) NOT NULL UNIQUE PRIMARY KEY
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

@@ -3,6 +3,7 @@ package corendonlms.main;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -14,9 +15,22 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public final class MiscUtil
 {
-
+    
+    //Algorithm to use for the password hashing
     private static final String ALGORITHM = "MD5";
+    
+    //Character set to assume for the password hashing
     private static final Charset CHAR_SET = Charset.forName("UTF-8");
+    
+    //Regular expression for verifying an e-mail address' validity
+    //Credits: Chanaka udaya @ StackOverflow 
+    private static final String EMAIL_EXPRESSION = "^[_A-Za-z0-9-\\+]+(\\.[_A-"
+            + "Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    
+    //Compiled pattern for EMAIL_EXPRESSION
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_EXPRESSION, Pattern.CASE_INSENSITIVE);
+    
+    //Salt to use for the password hashing
     private static final String SALT = "Jz:Gcp>!YxaVAFe("; //TODO: Change before push to prod
 
     //No constuctor exposed
@@ -83,6 +97,20 @@ public final class MiscUtil
     public static boolean isStringNullOrWhiteSpace(String value)
     {
         return (value == null) || (value.trim().isEmpty());
+    }
+    
+    /**
+     * Checks whether a string is a valid e-mail address
+     * 
+     * @param value The string to verify
+     * @return Boolean indicating whether the 
+     * value passed is a valid e-mail address
+     */
+    public static boolean isValidEmailAddress(String value)
+    {
+        //Return false if the string is null or whitespace.
+        //If it is not, validate as e-mail address through the pattern
+        return !isStringNullOrWhiteSpace(value) && EMAIL_PATTERN.matcher(value).find();
     }
 
     /**
