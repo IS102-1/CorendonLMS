@@ -15,21 +15,21 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public final class MiscUtil
 {
-    
+
     //Algorithm to use for the password hashing
     private static final String ALGORITHM = "MD5";
-    
+
     //Character set to assume for the password hashing
     private static final Charset CHAR_SET = Charset.forName("UTF-8");
-    
+
     //Regular expression for verifying an e-mail address' validity
     //Credits: Chanaka udaya @ StackOverflow 
     private static final String EMAIL_EXPRESSION = "^[_A-Za-z0-9-\\+]+(\\.[_A-"
             + "Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    
+
     //Compiled pattern for EMAIL_EXPRESSION
     private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_EXPRESSION, Pattern.CASE_INSENSITIVE);
-    
+
     //Salt to use for the password hashing
     private static final String SALT = "Jz:Gcp>!YxaVAFe("; //TODO: Change before push to prod
 
@@ -70,7 +70,7 @@ public final class MiscUtil
 
     /**
      * Hashes a string
-     * 
+     *
      * @param input The string object to hash
      * @param useSalt Indicates whether the password should be salted
      * @return The hashed representative of the passed string
@@ -98,19 +98,101 @@ public final class MiscUtil
     {
         return (value == null) || (value.trim().isEmpty());
     }
-    
+
     /**
      * Checks whether a string is a valid e-mail address
-     * 
+     *
      * @param value The string to verify
-     * @return Boolean indicating whether the 
-     * value passed is a valid e-mail address
+     * @return Boolean indicating whether the value passed is a valid e-mail
+     * address
      */
     public static boolean isValidEmailAddress(String value)
     {
         //Return false if the string is null or whitespace.
         //If it is not, validate as e-mail address through the pattern
         return !isStringNullOrWhiteSpace(value) && EMAIL_PATTERN.matcher(value).find();
+    }
+
+    /**
+     * Joins a string by seperating all values by the seperator
+     *
+     * @param seperator String to seperate all values by
+     * @param values Values to be seperated by the seperator
+     * @return Joined string with all values seperated by the seperator
+     */
+    public static String joinString(String seperator, String[] values)
+    {
+        return joinString(seperator, values, false);
+    }
+    
+    /**
+     * Joins a string by seperating all values by the seperator
+     *
+     * @param seperator String to seperate all values by
+     * @param values Values to be seperated by the seperator
+     * @param quote Indicates whether the values should be enclosed by quotes
+     * @return Joined string with all values seperated by the seperator
+     */
+    public static String joinString(String seperator, String[] values, boolean quote)
+    {
+        if (values.length == 0 || isStringNullOrWhiteSpace(seperator))
+        {
+            throw new IllegalArgumentException("The values and seperator "
+                    + "can not be empty.");
+        }
+
+        StringBuilder builder = new StringBuilder(values[0]);
+
+        for (int i = 1; i < values.length; i++)
+        {
+            String value;
+
+            if (!isStringNullOrWhiteSpace(value = values[i]))
+            {
+                builder.append(seperator);
+                
+                builder.append(quote ? String.format("'%s'", value) : value);
+            }
+        }
+
+        return builder.toString();
+    }
+    
+    /**
+     * Joins a string by seperating all values by the seperator
+     *
+     * @param seperator String to seperate all values by
+     * @param values Values to be seperated by the seperator. Converted to 
+     * strings
+     * @param quote Indicates whether the values should be enclosed by quotes
+     * @return Joined string with all values seperated by the seperator
+     */
+    public static String joinString(String seperator, Object[] values, boolean quote)
+    {
+        //TODO: Merge overloads
+        
+        if (values.length == 0 || isStringNullOrWhiteSpace(seperator))
+        {
+            throw new IllegalArgumentException("The values and seperator "
+                    + "can not be empty.");
+        }
+
+        StringBuilder builder = new StringBuilder((quote ? String.format("'%s'", 
+                values[0]) : values[0]).toString());
+
+        for (int i = 1; i < values.length; i++)
+        {
+            String value;
+
+            if (!isStringNullOrWhiteSpace(value = values[i].toString()))
+            {
+                builder.append(seperator);
+                
+                builder.append(quote ? String.format("'%s'", value) : value);
+            }
+        }
+
+        return builder.toString();
     }
 
     /**

@@ -1,10 +1,12 @@
 package corendonlms.main;
 
-import corendonlms.connectivity.CustomerManager;
 import corendonlms.connectivity.DbManager;
-import corendonlms.model.UserAccount;
-import corendonlms.view.Login;
+import corendonlms.connectivity.QueryManager;
+import corendonlms.model.DatabaseTables;
+import corendonlms.model.customers.Customer;
+import corendonlms.model.users.UserAccount;
 import corendonlms.view.PanelViewer;
+import corendonlms.view.panels.Login;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.SwingUtilities;
@@ -40,7 +42,7 @@ public class CorendonLMS
     /**
      * Represents the application's main window
      */
-    public static final PanelViewer PANEL_VIEWER = new PanelViewer();
+    public static final PanelViewer MAIN_PANEL = new PanelViewer();
 
     //Represents the current instance of the application
     private static final CorendonLMS APPLICATION = new CorendonLMS();
@@ -69,7 +71,7 @@ public class CorendonLMS
 
     /**
      * The application's main entry point. Creates an instance, connects to the
-     * underlaying database and shows the login panel0
+     * underlaying database and shows the login panel
      *
      * @param args the command line arguments
      */
@@ -77,12 +79,13 @@ public class CorendonLMS
     {
         System.out.printf("Starting %s\tCurrent version: %s\n",
                 APPLICATION_NAME, CURRENT_VERSION);
-
-        MiscUtil.setLookAndFeel(LOOK_AND_FEEL);
         
+        MiscUtil.setLookAndFeel(LOOK_AND_FEEL);
+
         //Open the connection to the database
         DbManager.connect();
-        
+
+        //Display the main panel
         SwingUtilities.invokeLater(new Runnable()
         {
             @Override
@@ -90,10 +93,11 @@ public class CorendonLMS
             {
                 try
                 {
-                    PANEL_VIEWER.displayPanel(new Login());
+                    MAIN_PANEL.displayPanel(new Login());
                 } catch (Exception e)
                 {
-                    System.err.println("Could not launch application:\n" + e.getMessage());
+                    System.err.println("Exception launching application:\n" 
+                            + e.getMessage());
                 }
             }
         });

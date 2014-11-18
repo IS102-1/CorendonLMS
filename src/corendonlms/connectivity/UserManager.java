@@ -1,7 +1,7 @@
 package corendonlms.connectivity;
 
 import corendonlms.main.MiscUtil;
-import corendonlms.model.UserRoles;
+import corendonlms.model.users.UserRoles;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

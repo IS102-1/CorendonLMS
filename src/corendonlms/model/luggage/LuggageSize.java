@@ -1,4 +1,4 @@
-package corendonlms.model;
+package corendonlms.model.luggage;
 
 /**
  * Enumeration holding the various sizes luggage can have

@@ -1,8 +1,12 @@
 package corendonlms.connectivity;
 
-import corendonlms.model.Customer;
+import corendonlms.main.MiscUtil;
+import corendonlms.model.customers.Customer;
+import corendonlms.model.customers.CustomerSearchModes;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Conveniently formats SQL queries related to customer management.
@@ -15,6 +19,11 @@ public final class CustomerManager
 
     //Customers' table name
     private static final String TABLE_NAME = "customers";
+
+    //No constructor exposed
+    private CustomerManager()
+    {
+    }
 
     /**
      * Registers a new customer and adds it to the database
@@ -69,6 +78,65 @@ public final class CustomerManager
             throws IllegalArgumentException
     {
         return addCustomer(new Customer(name, address, emailAddress, phoneNumber));
+    }
+
+    /**
+     * Gets every entry in the customer database
+     *
+     * @return Every entry in the customer database as a list of customer
+     */
+    public static List<Customer> getCustomers()
+    {
+        return getCustomers("", CustomerSearchModes.ANY);
+    }
+
+    /**
+     * Searches the customer database for the specified query in the specified
+     * column
+     *
+     * @param searchQuery The query to search for
+     * @param searchMode The row to search in
+     * @return The entries in the custoemr database matching the query as a list
+     * of customer
+     * @throws IllegalArgumentException
+     */
+    public static List<Customer> getCustomers(String searchQuery,
+            CustomerSearchModes searchMode) throws IllegalArgumentException
+    {
+        String query = "SELECT * FROM " + TABLE_NAME;
+
+        if (searchMode != CustomerSearchModes.ANY)
+        {
+            if (MiscUtil.isStringNullOrWhiteSpace(searchQuery))
+            {
+                throw new IllegalArgumentException("The search query "
+                        + "can not be empty!");
+            }
+            
+            query += " WHERE " + searchMode + " LIKE '%" + searchQuery + "%'";
+        }
+
+        ResultSet results = DbManager.executeQuery(query);
+
+        List<Customer> customers = new ArrayList<>();
+
+        try
+        {
+            while (results.next())
+            {
+                customers.add(new Customer(
+                        results.getString("name"),
+                        results.getString("address"),
+                        results.getString("email_address"),
+                        results.getString("phone_Number")
+                ));
+            }
+        } catch (SQLException ex)
+        {
+            System.err.println("SQL exception: " + ex.getMessage());
+        }
+
+        return customers;
     }
 
     /**
