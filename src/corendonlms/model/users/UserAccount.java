@@ -1,6 +1,8 @@
 package corendonlms.model.users;
 
 import corendonlms.main.MiscUtil;
+import corendonlms.model.DatabaseTables;
+import corendonlms.model.IStorable;
 
 /**
  * Represents a user account. 
@@ -8,9 +10,10 @@ import corendonlms.main.MiscUtil;
  *
  * @author Emile Pels
  */
-public class UserAccount
+public class UserAccount implements IStorable
 {
-
+    private static final String TABLE_NAME = "users";
+    
     private final String username, password;
     private final UserRoles userRole;
 
@@ -39,16 +42,6 @@ public class UserAccount
     {
         return username;
     }
-    
-    /**
-     * Get the value of password
-     * 
-     * @return the value of password. Hashed 
-     */
-    public String getPassword()
-    {
-        return password;
-    }
 
     /**
      * Get the value of userRole
@@ -64,5 +57,25 @@ public class UserAccount
     public String toString()
     {
         return String.format("Username: %s UserRole: %s", username, userRole);
+    }
+
+    @Override
+    public String getUpdate()
+    {
+        return String.format("INSERT INTO %s (username, password, user_role) "
+                + "VALUES ('%s', '%s', '%s')", getTable().toString(), username, password, 
+                userRole.toString().toLowerCase());
+    }
+
+    @Override
+    public int getFieldLength()
+    {
+        return 3;
+    }
+
+    @Override
+    public DatabaseTables getTable()
+    {
+        return DatabaseTables.USERS;
     }
 }

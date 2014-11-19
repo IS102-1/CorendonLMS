@@ -1,10 +1,8 @@
 package corendonlms.main;
 
-import corendonlms.connectivity.DbManager;
-import corendonlms.connectivity.QueryManager;
-import corendonlms.model.DatabaseTables;
-import corendonlms.model.customers.Customer;
+import corendonlms.connectivity.QueryHelper;
 import corendonlms.model.users.UserAccount;
+import corendonlms.model.users.UserRoles;
 import corendonlms.view.PanelViewer;
 import corendonlms.view.panels.Login;
 import java.awt.Color;
@@ -79,12 +77,9 @@ public class CorendonLMS
     {
         System.out.printf("Starting %s\tCurrent version: %s\n",
                 APPLICATION_NAME, CURRENT_VERSION);
-        
+                
         MiscUtil.setLookAndFeel(LOOK_AND_FEEL);
-
-        //Open the connection to the database
-        DbManager.connect();
-
+        
         //Display the main panel
         SwingUtilities.invokeLater(new Runnable()
         {

@@ -1,8 +1,8 @@
 package corendonlms.model.customers;
 
 import corendonlms.main.MiscUtil;
+import corendonlms.model.DatabaseTables;
 import corendonlms.model.IStorable;
-import java.util.TreeMap;
 
 /**
  * Represents a customer
@@ -11,8 +11,9 @@ import java.util.TreeMap;
  */
 public class Customer implements IStorable
 {
-    
-    private final TreeMap<String, String> fields = new TreeMap<>();
+
+    private static final DatabaseTables TABLE = DatabaseTables.CUSTOMERS;
+    private final String name, address, emailAddress, phoneNumber;
 
     /**
      * Initializes a new Customer object and sets their appropriate properties
@@ -40,10 +41,10 @@ public class Customer implements IStorable
                     + "address is not valid.");
         }
 
-        fields.put("name", name);
-        fields.put("address", address);
-        fields.put("email_address", emailAddress);
-        fields.put("phone_number", phoneNumber);
+        this.name = name;
+        this.address = address;
+        this.emailAddress = emailAddress;
+        this.phoneNumber = phoneNumber;
     }
 
     /**
@@ -53,7 +54,7 @@ public class Customer implements IStorable
      */
     public String getAddress()
     {
-        return fields.get("address");
+        return address;
     }
 
     /**
@@ -63,7 +64,7 @@ public class Customer implements IStorable
      */
     public String getEmailAddress()
     {
-        return fields.get("email_address");
+        return emailAddress;
     }
 
     /**
@@ -73,7 +74,7 @@ public class Customer implements IStorable
      */
     public String getName()
     {
-        return fields.get("name");
+        return name;
     }
 
     /**
@@ -83,7 +84,7 @@ public class Customer implements IStorable
      */
     public String getPhoneNumber()
     {
-        return fields.get("phone_number");
+        return phoneNumber;
     }
 
     @Override
@@ -95,27 +96,24 @@ public class Customer implements IStorable
     }
 
     @Override
-    public String getField(String key)
-    {
-        return fields.get(key);
-    }
-
-    @Override
     public int getFieldLength()
     {
-        return fields.size();
+        return TABLE.getColumnLength();
     }
 
     @Override
-    public TreeMap<String, String> getFields()
+    public String getUpdate()
     {
-        return fields;
+        return String.format("INSERT INTO %s (name, address, email_address, "
+                + "phone_number) VALUES ('%s', '%s', '%s', '%s')",
+                TABLE.toString(), name, address, emailAddress, phoneNumber);
     }
 
     @Override
-    public void setField(String key, String value)
+    public DatabaseTables getTable()
     {
-        fields.remove(key);
-        fields.put(key, value);
+        return TABLE;
     }
+
+    public enum Columns { NAME, ADDRESS, EMAIL_ADDRESS, PHONE_NUMBER, ANY };
 }

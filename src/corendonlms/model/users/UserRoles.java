@@ -8,8 +8,13 @@ package corendonlms.model.users;
  */
 public enum UserRoles
 {
-    UNAUTHORIZED,
-    DESK_EMPLOYEE,
-    MANAGER,
-    ADMIN
+    UNAUTHORIZED(),
+    DESK_EMPLOYEE(),
+    MANAGER(),
+    ADMIN();
+
+    public String getDatabaseIdentifier()
+    {
+        return toString().toLowerCase();
+    }
 }

@@ -3,6 +3,10 @@ package corendonlms.main;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -87,6 +91,21 @@ public final class MiscUtil
         return hash;
     }
 
+    public static boolean isResultSetEmpty(ResultSet results)
+    {
+        boolean isEmpty = true;
+        
+        try
+        {
+            isEmpty = !results.next();
+        } catch (SQLException ex)
+        {
+            System.err.println("SQL exception: " + ex.getMessage());
+        }
+        
+        return isEmpty;
+    }
+    
     /**
      * Checks whether a string is null, empty or whitespace.
      *
