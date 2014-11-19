@@ -1,14 +1,18 @@
 package corendonlms.connectivity;
 
+import corendonlms.main.MiscUtil;
 import corendonlms.model.DatabaseTables;
+import corendonlms.model.IStorable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 
 /**
- * Maintains a connection to the application's database. Non-inheritable, as
- * only static members are defined
+ * Maintains a connection to the application's database and acts as a pipeline
+ * for outgoing queries and update. Non-inheritable, as only static members are
+ * defined
  *
  * @author Emile Pels
  */
@@ -29,7 +33,7 @@ public final class DbManager
     }
 
     /**
-     * Factory method opening a connection to the underlaying MySQL database
+     * Opens a connection to the underlaying MySQL database
      */
     public static void connect()
     {
@@ -43,7 +47,8 @@ public final class DbManager
 
         try
         {
-            _dbConnection = DriverManager.getConnection(DATABASE_URL, DATABASE_USERNAME, DATABASE_PASSWORD);
+            _dbConnection = DriverManager.getConnection(DATABASE_URL,
+                    DATABASE_USERNAME, DATABASE_PASSWORD);
         } catch (SQLException ex)
         {
             System.err.println("SQL exception: " + ex.getMessage());
@@ -110,6 +115,74 @@ public final class DbManager
         {
             System.err.println("SQL exception: " + ex.getMessage());
         }
+    }
+
+    /**
+     * Adds an instance of IStorable to the specified database table
+     *
+     * @param value The IStorable instance to add to the specified table
+     * @return Boolean indicating whether the value was succesfully added.
+     * Success is assumed when the number of rows has increased by 1 throughout
+     * the execution of this method
+     */
+    public static boolean add(IStorable value)
+    {
+        DatabaseTables table = value.getTable();
+        if (value.getFieldLength() != table.getColumnLength())
+        {
+            throw new IllegalArgumentException("The number of fields"
+                    + " in the IStorable instance does not match the number"
+                    + " of columns to be filled for this table.");
+        }
+        int beforeCount = table.getRowAmount();
+        DbManager.executeUpdate(value.getUpdate());
+        int afterCount = table.getRowAmount();
+        return afterCount == beforeCount + 1;
+    }
+
+    /**
+     * Adds an instance of IStorable to the specified database table
+     *
+     * @param values The IStorable instance to add to the specified table
+     */
+    public static void addRange(Collection<IStorable> values)
+    {
+        for (IStorable item : values)
+        {
+            add(item);
+        }
+    }
+
+    /**
+     * Gets all the items in the respective table matching the query in the
+     * specified column
+     *
+     * @param table Table to search
+     * @param searchQuery String to search the specified table for
+     * @param column Column to search
+     * @return A list of all Customer objects matching the query
+     */
+    public static ResultSet getResultSet(DatabaseTables table, 
+            String searchQuery, String column) throws IllegalArgumentException
+    {
+        String columnLowered = column.toLowerCase();
+        String query = "SELECT * FROM " + table.toString();
+        if (!MiscUtil.isStringNullOrWhiteSpace(column) 
+                && !column.equalsIgnoreCase("ANY"))
+        {
+            if (MiscUtil.isStringNullOrWhiteSpace(searchQuery))
+            {
+                throw new IllegalArgumentException("The search query can not" 
+                        + "be null or whitespace.");
+            }
+            query += " WHERE " + columnLowered + " LIKE '%" + searchQuery + "%'";
+        } else
+        {
+            throw new IllegalArgumentException("The column can not be " 
+                    + "null or whitespace.");
+        }
+        
+        return DbManager.executeQuery(query);
     }
 
     public static int getRowAmount(DatabaseTables table)

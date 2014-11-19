@@ -46,7 +46,7 @@ public final class QueryHelper
      */
     public static UserRoles getUserRole(String username, String password)
     {
-        ResultSet results = QueryManager.getResultSet(DatabaseTables.USERS,
+        ResultSet results = DbManager.getResultSet(DatabaseTables.USERS,
                 username, "username");
 
         UserRoles role = UserRoles.UNAUTHORIZED;
@@ -70,7 +70,7 @@ public final class QueryHelper
 
     public static boolean isUsernameAvailable(String username)
     {
-        ResultSet results = QueryManager.getResultSet(DatabaseTables.USERS,
+        ResultSet results = DbManager.getResultSet(DatabaseTables.USERS,
                 username, "username");
 
         return MiscUtil.isResultSetEmpty(results);
@@ -99,7 +99,7 @@ public final class QueryHelper
         }
 
         UserAccount user = new UserAccount(username, password, role);
-        return QueryManager.add(user);
+        return DbManager.add(user);
     }
 
     /**
@@ -111,7 +111,7 @@ public final class QueryHelper
      */
     public static boolean isPhoneNumberRegistered(String phoneNumber)
     {
-        ResultSet results = QueryManager.getResultSet(DatabaseTables.CUSTOMERS,
+        ResultSet results = DbManager.getResultSet(DatabaseTables.CUSTOMERS,
                 phoneNumber, CustomerSearchModes.PHONE_NUMBER.toString());
 
         return !MiscUtil.isResultSetEmpty(results);
@@ -139,7 +139,7 @@ public final class QueryHelper
         }
 
         Customer customer = new Customer(name, address, emailAddress, phoneNumber);
-        return QueryManager.add(customer);
+        return DbManager.add(customer);
     }
     
     /**
@@ -158,6 +158,6 @@ public final class QueryHelper
     {
         Luggage luggage = new Luggage(color, pattern, brand, passengerId, 
                 weight, size);
-        return QueryManager.add(luggage);
+        return DbManager.add(luggage);
     }
 }
