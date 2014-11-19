@@ -12,7 +12,7 @@ import corendonlms.model.IStorable;
  */
 public class UserAccount implements IStorable
 {
-    private static final String TABLE_NAME = "users";
+    private static final DatabaseTables TABLE = DatabaseTables.USERS;
     
     private final String username, password;
     private final UserRoles userRole;
@@ -76,6 +76,6 @@ public class UserAccount implements IStorable
     @Override
     public DatabaseTables getTable()
     {
-        return DatabaseTables.USERS;
+        return TABLE;
     }
 }

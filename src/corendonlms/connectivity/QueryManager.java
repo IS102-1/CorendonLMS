@@ -7,8 +7,7 @@ import java.sql.ResultSet;
 import java.util.Collection;
 
 /**
- * Conveniently formats SQL queries. Non-inheritable, as only static members are
- * defined
+ * Pipeline between the database and IStorable interface
  *
  * @author Emile Pels
  */
@@ -40,13 +39,13 @@ public final class QueryManager
         }
 
         //Check the amount of rows before calling INSERT
-        int beforeCount = DbManager.getRowAmount(table.toString());
+        int beforeCount = table.getRowAmount();
 
         //Attempt adding the entry to the database
         DbManager.executeUpdate(value.getUpdate());
 
         //Check the amount of rows after calling INSERT
-        int afterCount = DbManager.getRowAmount(table.toString());
+        int afterCount = table.getRowAmount();
 
         //Return a boolean indicating whether the amount of rows increased by one
         //(c.q. if the account was registered succesfully)

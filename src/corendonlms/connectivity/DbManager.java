@@ -1,5 +1,6 @@
 package corendonlms.connectivity;
 
+import corendonlms.model.DatabaseTables;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -111,7 +112,7 @@ public final class DbManager
         }
     }
 
-    public static int getRowAmount(String table)
+    public static int getRowAmount(DatabaseTables table)
     {
         String query = "SELECT COUNT(*) FROM " + table;
         ResultSet results = executeQuery(query);

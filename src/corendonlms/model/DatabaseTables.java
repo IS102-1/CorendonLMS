@@ -1,5 +1,7 @@
 package corendonlms.model;
 
+import corendonlms.connectivity.DbManager;
+
 /**
  * Represents the various tables defined in the underlaying database
  *
@@ -7,10 +9,16 @@ package corendonlms.model;
  */
 public enum DatabaseTables
 {
-
+    
     CUSTOMERS("customers", new String[] 
     { 
         "name", "address", "email_address", "phone_number" 
+    }),
+    
+    LUGGAGE("luggage", new String[]
+    {
+        "color", "pattern", "brand", 
+        "passenger_id", "weight", "size" 
     }),
     
     USERS("users", new String[] 
@@ -47,6 +55,16 @@ public enum DatabaseTables
     public String[] getColumns()
     {
         return columns;
+    }
+    
+    /**
+     * Gets the amount of rows in the current table
+     * 
+     * @return Amount of rows in the current table
+     */
+    public int getRowAmount()
+    {
+        return DbManager.getRowAmount(this);
     }
 
     /***

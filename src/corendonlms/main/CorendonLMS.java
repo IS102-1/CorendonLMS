@@ -1,6 +1,7 @@
 package corendonlms.main;
 
 import corendonlms.connectivity.QueryHelper;
+import corendonlms.model.luggage.LuggageSize;
 import corendonlms.model.users.UserAccount;
 import corendonlms.model.users.UserRoles;
 import corendonlms.view.PanelViewer;
@@ -80,6 +81,8 @@ public class CorendonLMS
                 
         MiscUtil.setLookAndFeel(LOOK_AND_FEEL);
         
+        initTables();
+        
         //Display the main panel
         SwingUtilities.invokeLater(new Runnable()
         {
@@ -96,5 +99,22 @@ public class CorendonLMS
                 }
             }
         });
+    }
+    
+    private static void initTables()
+    {
+        boolean success;
+        
+        success = QueryHelper.registerLuggage("Blauw", "N.vt.", "Eastpak", 
+                "2726", "15.6 kg", LuggageSize.Large);
+        System.out.println("Luggage: " + success);
+        
+        success = QueryHelper.registerCustomer("Emile Pels", "2152 TJ 1", 
+                "emile-pels@hotmail.com", "0622247999");
+        System.out.println("Customer: " + success);
+        
+        success = QueryHelper.registerUserAccount("pels", "admin", 
+                UserRoles.ADMIN);
+        System.out.println("User: " + success);
     }
 }

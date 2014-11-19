@@ -106,7 +106,7 @@ public class Customer implements IStorable
     {
         return String.format("INSERT INTO %s (name, address, email_address, "
                 + "phone_number) VALUES ('%s', '%s', '%s', '%s')",
-                TABLE.toString(), name, address, emailAddress, phoneNumber);
+                TABLE, name, address, emailAddress, phoneNumber);
     }
 
     @Override
@@ -114,6 +114,4 @@ public class Customer implements IStorable
     {
         return TABLE;
     }
-
-    public enum Columns { NAME, ADDRESS, EMAIL_ADDRESS, PHONE_NUMBER, ANY };
 }

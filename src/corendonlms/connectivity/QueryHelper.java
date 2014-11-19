@@ -1,14 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package corendonlms.connectivity;
 
 import corendonlms.main.MiscUtil;
 import corendonlms.model.DatabaseTables;
 import corendonlms.model.customers.Customer;
 import corendonlms.model.customers.CustomerSearchModes;
+import corendonlms.model.luggage.Luggage;
+import corendonlms.model.luggage.LuggageSize;
 import corendonlms.model.users.UserAccount;
 import corendonlms.model.users.UserRoles;
 import java.sql.ResultSet;
@@ -143,5 +140,24 @@ public final class QueryHelper
 
         Customer customer = new Customer(name, address, emailAddress, phoneNumber);
         return QueryManager.add(customer);
+    }
+    
+    /**
+     * Registers a new luggage and adds it to the database
+     * 
+     * @param color The luggage's color
+     * @param pattern The luggage's pattern
+     * @param brand The luggage's brand
+     * @param passengerId The luggage's passenger ID
+     * @param weight The luggage's weight
+     * @param size The luggage's size
+     * @return Boolean indicating whether the luggage was added succesfully
+     */
+    public static boolean registerLuggage(String color, String pattern, 
+            String brand, String passengerId, String weight, LuggageSize size)
+    {
+        Luggage luggage = new Luggage(color, pattern, brand, passengerId, 
+                weight, size);
+        return QueryManager.add(luggage);
     }
 }
