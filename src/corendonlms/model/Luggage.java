@@ -1,6 +1,6 @@
-package corendonlms.model.luggage;
+package corendonlms.model;
 
-import corendonlms.main.MiscUtil;
+import corendonlms.main.util.StringUtil;
 import corendonlms.model.DatabaseTables;
 import corendonlms.model.IStorable;
 
@@ -31,8 +31,8 @@ public final class Luggage implements IStorable
             String passengerId, String weight, LuggageSize size)
             throws IllegalArgumentException
     {
-        if (MiscUtil.isStringNullOrWhiteSpace(brand) 
-                || MiscUtil.isStringNullOrWhiteSpace(passengerId))
+        if (StringUtil.isStringNullOrWhiteSpace(brand) 
+                || StringUtil.isStringNullOrWhiteSpace(passengerId))
         {
             throw new IllegalArgumentException("The luggage's brand and "
                     + "its passenger ID can not be null or whitespace.");

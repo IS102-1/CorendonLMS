@@ -1,6 +1,6 @@
-package corendonlms.model.customers;
+package corendonlms.model;
 
-import corendonlms.main.MiscUtil;
+import corendonlms.main.util.StringUtil;
 import corendonlms.model.DatabaseTables;
 import corendonlms.model.IStorable;
 
@@ -26,16 +26,16 @@ public class Customer implements IStorable
     public Customer(String name, String address,
             String emailAddress, String phoneNumber)
     {
-        if (MiscUtil.isStringNullOrWhiteSpace(name)
-                || MiscUtil.isStringNullOrWhiteSpace(address)
-                || MiscUtil.isStringNullOrWhiteSpace(phoneNumber))
+        if (StringUtil.isStringNullOrWhiteSpace(name)
+                || StringUtil.isStringNullOrWhiteSpace(address)
+                || StringUtil.isStringNullOrWhiteSpace(phoneNumber))
         {
             throw new IllegalArgumentException("The customer's name, address "
                     + "and phone number can not be empty.");
         }
 
-        if (!MiscUtil.isStringNullOrWhiteSpace(emailAddress)
-                && !MiscUtil.isValidEmailAddress(emailAddress))
+        if (!StringUtil.isStringNullOrWhiteSpace(emailAddress)
+                && !StringUtil.isValidEmailAddress(emailAddress))
         {
             throw new IllegalArgumentException("The customer's e-mail"
                     + "address is not valid.");

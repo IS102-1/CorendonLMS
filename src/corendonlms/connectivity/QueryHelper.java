@@ -1,15 +1,18 @@
 package corendonlms.connectivity;
 
-import corendonlms.main.MiscUtil;
+import corendonlms.main.util.MiscUtil;
+import corendonlms.main.util.StringUtil;
 import corendonlms.model.DatabaseTables;
-import corendonlms.model.customers.Customer;
-import corendonlms.model.customers.CustomerSearchModes;
-import corendonlms.model.luggage.Luggage;
-import corendonlms.model.luggage.LuggageSize;
-import corendonlms.model.users.UserAccount;
-import corendonlms.model.users.UserRoles;
+import corendonlms.model.IStorable;
+import corendonlms.model.Customer;
+import corendonlms.model.CustomerSearchModes;
+import corendonlms.model.Luggage;
+import corendonlms.model.LuggageSize;
+import corendonlms.model.UserAccount;
+import corendonlms.model.UserRoles;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.InputMismatchException;
 
 /**
  * Eases SQL lookups by pre-defining frequently executed queries
@@ -56,7 +59,7 @@ public final class QueryHelper
             //If the username exists and the password matches, get the user
             //role from the database and store the result in role
             if (results.next() && results.getString("password")
-                    .equals(MiscUtil.hashString(password, true)))
+                    .equals(StringUtil.hashString(password, true)))
             {
                 role = UserRoles.valueOf(results.getString("user_role").toUpperCase());
             }
@@ -78,15 +81,13 @@ public final class QueryHelper
 
     /**
      * Registers a new user account and adds it to the database
-     * 
+     *
      * @param username The user's username
      * @param password The user's (unhashed) password
      * @param role The user's UserRole
      * @return Boolean indicating success. This will return false in cases
-     * where:
-     * -The password is too short;
-     * -The username is equal to the password;
-     * -The uesrname is already in use.
+     * where: -The password is too short; -The username is equal to the
+     * password; -The uesrname is already in use.
      */
     public static boolean registerUserAccount(String username, String password,
             UserRoles role)
@@ -103,6 +104,49 @@ public final class QueryHelper
     }
 
     /**
+     * Checks if the customer ID is associated with a customer entry
+     *
+     * @param customerId The customer ID to check
+     * @return Boolean indicating whether the phone number is already associated
+     * with a customer entry
+     */
+    public static boolean isCustomerIdRegistered(String customerId)
+    {
+        try
+        {
+            int id = Integer.parseInt(customerId);
+
+            return QueryHelper.isCustomerIdRegistered(id);
+        } catch (InputMismatchException ex)
+        {
+            return false;
+        }
+    }
+
+    /**
+     * Checks if the customer ID is associated with a customer entry
+     *
+     * @param customerId The customer ID to check
+     * @return Boolean indicating whether the phone number is already associated
+     * with a customer entry
+     */
+    public static boolean isCustomerIdRegistered(int customerId)
+    {
+        ResultSet results = DbManager.getResultSet(DatabaseTables.CUSTOMERS,
+                Integer.toString(customerId),
+                CustomerSearchModes.CUSTOMER_ID.toString(), true);
+
+        try
+        {
+            return results.next();
+        } catch (SQLException ex)
+        {
+            System.err.println("SQL exception: " + ex.getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Checks if the phone number is already associated with a customer entry
      *
      * @param phoneNumber The phone number to check
@@ -116,7 +160,7 @@ public final class QueryHelper
 
         return !MiscUtil.isResultSetEmpty(results);
     }
-    
+
     /**
      * Registers a new customer and adds it to the database
      *
@@ -130,7 +174,6 @@ public final class QueryHelper
     public static boolean registerCustomer(String name, String address,
             String emailAddress, String phoneNumber)
     {
-
         //Check if the phone number is not already in use
         if (isPhoneNumberRegistered(phoneNumber))
         {
@@ -141,10 +184,10 @@ public final class QueryHelper
         Customer customer = new Customer(name, address, emailAddress, phoneNumber);
         return DbManager.add(customer);
     }
-    
+
     /**
      * Registers a new luggage and adds it to the database
-     * 
+     *
      * @param color The luggage's color
      * @param pattern The luggage's pattern
      * @param brand The luggage's brand
@@ -153,11 +196,46 @@ public final class QueryHelper
      * @param size The luggage's size
      * @return Boolean indicating whether the luggage was added succesfully
      */
-    public static boolean registerLuggage(String color, String pattern, 
+    public static boolean registerLuggage(String color, String pattern,
             String brand, String passengerId, String weight, LuggageSize size)
     {
-        Luggage luggage = new Luggage(color, pattern, brand, passengerId, 
+        Luggage luggage = new Luggage(color, pattern, brand, passengerId,
                 weight, size);
         return DbManager.add(luggage);
+    }
+
+    /**
+     * Writes an action log to the database
+     * 
+     * @param userAccount User account the action was invoked from
+     * @param message Message to log for this action
+     */
+    public static void log(final UserAccount userAccount, final String message)
+    {
+        DbManager.add(new IStorable()
+        {
+            @Override
+            public String getUpdate()
+            {
+                return String.format("INSERT INTO %s (username, user_role, "
+                        + "date_time, log_message) VALUES ('%s', '%s', '%s', "
+                        + "'%s')", DatabaseTables.LOGS, 
+                        userAccount.getUsername(), userAccount.getUserRole(), 
+                        MiscUtil.getDateTimeString(), message);
+            }
+
+            @Override
+            public int getFieldLength()
+            {
+                return 4;
+            }
+
+            @Override
+            public DatabaseTables getTable()
+            {
+                return DatabaseTables.LOGS;
+            }
+
+        });
     }
 }

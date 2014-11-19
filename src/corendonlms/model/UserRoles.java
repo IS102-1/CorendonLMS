@@ -1,4 +1,4 @@
-package corendonlms.model.users;
+package corendonlms.model;
 
 /**
  * Enumeration holding the various roles user accounts

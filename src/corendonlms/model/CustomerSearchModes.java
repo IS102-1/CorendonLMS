@@ -1,4 +1,4 @@
-package corendonlms.model.customers;
+package corendonlms.model;
 
 /**
  * Represents the various fields which can be searched
@@ -13,7 +13,8 @@ public enum CustomerSearchModes
     ANY,
     EMAIL_ADDRESS("email_address"),
     NAME("name"),
-    PHONE_NUMBER("phone_number");
+    PHONE_NUMBER("phone_number"),
+    CUSTOMER_ID("customer_id");
     
     private String databaseIdentifier;
 

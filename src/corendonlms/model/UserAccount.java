@@ -1,6 +1,7 @@
-package corendonlms.model.users;
+package corendonlms.model;
 
-import corendonlms.main.MiscUtil;
+import corendonlms.main.util.MiscUtil;
+import corendonlms.main.util.StringUtil;
 import corendonlms.model.DatabaseTables;
 import corendonlms.model.IStorable;
 
@@ -29,7 +30,7 @@ public class UserAccount implements IStorable
     public UserAccount(String username, String password, UserRoles userRole)
     {
         this.username = username;
-        this.password = MiscUtil.hashString(password, true);
+        this.password = StringUtil.hashString(password, true);
         this.userRole = userRole;
     }
 

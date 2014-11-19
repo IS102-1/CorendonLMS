@@ -1,6 +1,7 @@
 package corendonlms.connectivity;
 
-import corendonlms.main.MiscUtil;
+import corendonlms.main.util.MiscUtil;
+import corendonlms.main.util.StringUtil;
 import corendonlms.model.DatabaseTables;
 import corendonlms.model.IStorable;
 import java.sql.Connection;
@@ -128,31 +129,88 @@ public final class DbManager
     public static boolean add(IStorable value)
     {
         DatabaseTables table = value.getTable();
+        
         if (value.getFieldLength() != table.getColumnLength())
         {
             throw new IllegalArgumentException("The number of fields"
                     + " in the IStorable instance does not match the number"
                     + " of columns to be filled for this table.");
         }
+        
+        //Count the rows before attempting to add entry
         int beforeCount = table.getRowAmount();
+        
+        //Attempts adding the entry
         DbManager.executeUpdate(value.getUpdate());
+        
+        //Count the rows after attempting to add entry
         int afterCount = table.getRowAmount();
+        
+        //Base success on whether the amount of rows increased by one
         return afterCount == beforeCount + 1;
     }
 
     /**
-     * Adds an instance of IStorable to the specified database table
-     *
-     * @param values The IStorable instance to add to the specified table
+     * Adds a collection of IStorable instances to the specified database table
+     * 
+     * @param values The IStorable instances to add to the specified database
+     * table
+     * @return Boolean indicating whether all entries were succesful
      */
-    public static void addRange(Collection<IStorable> values)
+    public static boolean addRange(Collection<IStorable> values)
     {
+        int succesful = 0;
+        
         for (IStorable item : values)
         {
-            add(item);
+            if (add(item))
+            {
+                succesful++;
+            }
         }
+        
+        return values.size() == succesful;
     }
 
+    /**
+     * Gets all the items in the respective table matching the query in the
+     * specified column
+     *
+     * @param table Table to search
+     * @param searchQuery String to search the specified table for
+     * @param column Column to search
+     * @param absolute Indicates whether the table should contain an exact
+     * match. If false, the returned set will also include entries in which
+     * the query is contained (rather than content tested for equality)
+     * @return A list of all Customer objects matching the query
+     */
+    public static ResultSet getResultSet(DatabaseTables table, String searchQuery, 
+            String column, boolean absolute) throws IllegalArgumentException
+    {
+        String columnLowered = column.toLowerCase();
+        String query = "SELECT * FROM " + table.toString();
+        
+        if (!StringUtil.isStringNullOrWhiteSpace(column) 
+                && !column.equalsIgnoreCase("ANY"))
+        {
+            if (StringUtil.isStringNullOrWhiteSpace(searchQuery))
+            {
+                throw new IllegalArgumentException("The search query can not" 
+                        + "be null or whitespace.");
+            }
+            
+            query += " WHERE " + columnLowered + 
+                     (absolute ? (String.format("='%s'", searchQuery)) 
+                               : (" LIKE '%" + searchQuery + "%'"));
+        } else
+        {
+            throw new IllegalArgumentException("The column can not be " 
+                    + "null or whitespace.");
+        }
+        
+        return DbManager.executeQuery(query);
+    }
+    
     /**
      * Gets all the items in the respective table matching the query in the
      * specified column
@@ -165,24 +223,7 @@ public final class DbManager
     public static ResultSet getResultSet(DatabaseTables table, 
             String searchQuery, String column) throws IllegalArgumentException
     {
-        String columnLowered = column.toLowerCase();
-        String query = "SELECT * FROM " + table.toString();
-        if (!MiscUtil.isStringNullOrWhiteSpace(column) 
-                && !column.equalsIgnoreCase("ANY"))
-        {
-            if (MiscUtil.isStringNullOrWhiteSpace(searchQuery))
-            {
-                throw new IllegalArgumentException("The search query can not" 
-                        + "be null or whitespace.");
-            }
-            query += " WHERE " + columnLowered + " LIKE '%" + searchQuery + "%'";
-        } else
-        {
-            throw new IllegalArgumentException("The column can not be " 
-                    + "null or whitespace.");
-        }
-        
-        return DbManager.executeQuery(query);
+        return getResultSet(table, searchQuery, column, false);
     }
 
     public static int getRowAmount(DatabaseTables table)

@@ -24,6 +24,11 @@ public enum DatabaseTables
     USERS("users", new String[] 
     { 
         "username", "password", "user_role"
+    }),
+    
+    LOGS("logs", new String[]
+    {
+       "username", "user_role", "date_time", "log_message" 
     });
 
     private final String tableName;
