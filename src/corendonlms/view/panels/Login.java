@@ -3,6 +3,8 @@ package corendonlms.view.panels;
 import corendonlms.connectivity.QueryHelper;
 import corendonlms.main.CorendonLMS;
 import corendonlms.main.util.MiscUtil;
+import corendonlms.model.ActionLog;
+import corendonlms.model.ILoggable;
 import corendonlms.model.UserAccount;
 import corendonlms.model.UserRoles;
 import java.awt.event.ActionEvent;
@@ -17,7 +19,7 @@ import javax.swing.JTextField;
  *
  * @author Emile Pels
  */
-public class Login extends JPanel implements ActionListener
+public class Login extends JPanel implements ActionListener, ILoggable
 {
 
     private JTextField usernameTextField;
@@ -101,8 +103,12 @@ public class Login extends JPanel implements ActionListener
             
             if (role != UserRoles.UNAUTHORIZED)
             {
-                CorendonLMS.currentUser = new UserAccount(username, "x", role);
-                QueryHelper.log(CorendonLMS.currentUser, "Signed in");
+                CorendonLMS.currentUser = new UserAccount(username, null, role, 
+                        false);
+                QueryHelper.registerLog(new ActionLog(CorendonLMS.currentUser, 
+                        "Signed in"));
+                
+                CorendonLMS.MAIN_PANEL.displayPanel(new ViewLogs());
                 
                 /**
                  * TODO: Show next panel
@@ -112,5 +118,11 @@ public class Login extends JPanel implements ActionListener
             MiscUtil.showMessage(String.format("Signing in was %ssuccesful!\n"
                     + "User role: %s", (role == UserRoles.UNAUTHORIZED ? "not " : ""), role));
         }
+    }
+
+    @Override
+    public void log(String message)
+    {
+        QueryHelper.registerLog(new ActionLog(CorendonLMS.currentUser, message));
     }
 }

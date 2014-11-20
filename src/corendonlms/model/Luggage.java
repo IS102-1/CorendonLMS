@@ -1,8 +1,6 @@
 package corendonlms.model;
 
 import corendonlms.main.util.StringUtil;
-import corendonlms.model.DatabaseTables;
-import corendonlms.model.IStorable;
 
 /**
  * Represents a piece of luggage for database writing
@@ -104,6 +102,15 @@ public final class Luggage implements IStorable
     public String getSize()
     {
         return size;
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format("* LUGGAGE *\n%-20s%s\n%-20s%s\n%-20s%s\n%-20s%s\n"
+                + "%-20s%s\n%-20s%s", "Passenger ID:", passengerId, "Brand:", 
+                brand, "Weight:", weight, "Size:", size, "Color:", color, 
+                "Pattern:", pattern);
     }
 
     @Override

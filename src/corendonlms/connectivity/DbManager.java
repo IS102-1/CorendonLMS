@@ -1,6 +1,5 @@
 package corendonlms.connectivity;
 
-import corendonlms.main.util.MiscUtil;
 import corendonlms.main.util.StringUtil;
 import corendonlms.model.DatabaseTables;
 import corendonlms.model.IStorable;
@@ -190,9 +189,14 @@ public final class DbManager
         String columnLowered = column.toLowerCase();
         String query = "SELECT * FROM " + table.toString();
         
-        if (!StringUtil.isStringNullOrWhiteSpace(column) 
-                && !column.equalsIgnoreCase("ANY"))
+        if (!column.equalsIgnoreCase("ANY"))
         {
+            if (StringUtil.isStringNullOrWhiteSpace(column))
+            {
+                throw new IllegalArgumentException("The column can not be " 
+                    + "null or whitespace.");
+            }
+            
             if (StringUtil.isStringNullOrWhiteSpace(searchQuery))
             {
                 throw new IllegalArgumentException("The search query can not" 
@@ -202,10 +206,6 @@ public final class DbManager
             query += " WHERE " + columnLowered + 
                      (absolute ? (String.format("='%s'", searchQuery)) 
                                : (" LIKE '%" + searchQuery + "%'"));
-        } else
-        {
-            throw new IllegalArgumentException("The column can not be " 
-                    + "null or whitespace.");
         }
         
         return DbManager.executeQuery(query);

@@ -1,9 +1,6 @@
 package corendonlms.model;
 
-import corendonlms.main.util.MiscUtil;
 import corendonlms.main.util.StringUtil;
-import corendonlms.model.DatabaseTables;
-import corendonlms.model.IStorable;
 
 /**
  * Represents a user account. 
@@ -29,11 +26,28 @@ public class UserAccount implements IStorable
      */
     public UserAccount(String username, String password, UserRoles userRole)
     {
+        this(username, password, userRole, true);
+    }
+    
+    /**
+     * Initializes a new UserAccount instance
+     * 
+     * @param username The user's username
+     * @param password The user's password. Can be left empty unless a new
+     * account should be registered through this instance. Password
+     * is hashed before its value is set
+     * @param hashPassword Indicates whether the password should be hashed
+     * @param userRole The user's role
+     */
+    public UserAccount(String username, String password, UserRoles userRole,
+            boolean hashPassword)
+    {
         this.username = username;
-        this.password = StringUtil.hashString(password, true);
+        this.password = hashPassword 
+                ? StringUtil.hashString(password, true) : password;
         this.userRole = userRole;
     }
-
+    
     /**
      * Get the value of username
      *

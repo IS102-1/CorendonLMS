@@ -1,13 +1,15 @@
 package corendonlms.main;
 
 import corendonlms.main.util.MiscUtil;
-import corendonlms.connectivity.QueryHelper;
 import corendonlms.model.UserAccount;
-import corendonlms.model.UserRoles;
 import corendonlms.view.PanelViewer;
 import corendonlms.view.panels.Login;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import javax.swing.SwingUtilities;
 
 /**
@@ -48,6 +50,9 @@ public class CorendonLMS
 
     //The version number in MAJOR.MINOR.REVISION.BUILD format
     private static final String CURRENT_VERSION = "1.0.0.0";
+    
+    //The filename to log any errors to
+    private static final String ERROR_LOG_FILENAME = "errors.log";
 
     //The application's LookAndFeel
     private static final String LOOK_AND_FEEL = "Nimbus";
@@ -67,6 +72,55 @@ public class CorendonLMS
     {
         return APPLICATION;
     }
+    
+    /**
+     * Changes the error output stream to a FileOutputStream and registers
+     * a hook listening for shutdown. Upon the application's shutdown,
+     * the streams are closed
+     * 
+     * @param fileName The filename to write error logs to
+     */
+    private static void setErrorStream(String fileName)
+    {
+        try
+        {
+            final FileOutputStream fileStream = new FileOutputStream(
+                    fileName, true); //Append to file
+            final PrintStream errStream = new PrintStream(fileStream);
+            
+            //Set the error stream to target the file
+            System.setErr(errStream);
+            
+            //Registers a hook listening for shutdown. Upon the application's
+            //termination, the streams are flushed closed
+            Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        fileStream.flush();
+                        errStream.flush();
+                        
+                        fileStream.close();
+                        errStream.close();
+                    } catch (IOException ex)
+                    {
+                    }
+                    
+                    System.out.printf("%s terminated\n", APPLICATION_NAME);
+                }
+            }));
+            
+        } catch (FileNotFoundException ex)
+        {
+            /**
+             * Error occured while setting up the error logging...
+             * ... the irony :[
+             */
+        }
+    }
 
     /**
      * The application's main entry point. Creates an instance, connects to the
@@ -76,12 +130,12 @@ public class CorendonLMS
      */
     public static void main(String[] args)
     {
+        setErrorStream(ERROR_LOG_FILENAME);
+        
         System.out.printf("Starting %s\tCurrent version: %s\n",
                 APPLICATION_NAME, CURRENT_VERSION);
                 
         MiscUtil.setLookAndFeel(LOOK_AND_FEEL);
-        
-        QueryHelper.registerUserAccount("pels", "admin", UserRoles.ADMIN);
         
         //Display the main panel
         SwingUtilities.invokeLater(new Runnable()

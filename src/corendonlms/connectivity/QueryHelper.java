@@ -2,17 +2,19 @@ package corendonlms.connectivity;
 
 import corendonlms.main.util.MiscUtil;
 import corendonlms.main.util.StringUtil;
-import corendonlms.model.DatabaseTables;
-import corendonlms.model.IStorable;
+import corendonlms.model.ActionLog;
 import corendonlms.model.Customer;
 import corendonlms.model.CustomerSearchModes;
+import corendonlms.model.DatabaseTables;
 import corendonlms.model.Luggage;
 import corendonlms.model.LuggageSize;
 import corendonlms.model.UserAccount;
 import corendonlms.model.UserRoles;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 
 /**
  * Eases SQL lookups by pre-defining frequently executed queries
@@ -24,6 +26,36 @@ public final class QueryHelper
 
     private static final int PASSWORD_MIN_LENGTH = 5;
 
+    /**
+     * Gets all the registered users in the database
+     * 
+     * @return A list containing all registered users in the database
+     */
+    public static List<UserAccount> getAllUsers()
+    {
+        List<UserAccount> userAccounts = new ArrayList<>();
+        
+        ResultSet results = DbManager.getResultSet(DatabaseTables.USERS, 
+                null, "ANY");
+        
+        try
+        {
+            while (results.next())            
+            {
+                String username = results.getString("username");
+                UserRoles userRole = UserRoles.valueOf(results.getString(
+                        "user_role").toUpperCase());
+                 
+                userAccounts.add(new UserAccount(username, null, userRole, false));
+            }
+        } catch (SQLException ex)
+        {
+            System.err.println("SQL exception: " + ex.getMessage());
+        }
+        
+        return userAccounts;
+    }
+    
     /**
      * Gets the UserRoles value associated with the passed credentials.
      *
@@ -205,37 +237,47 @@ public final class QueryHelper
     }
 
     /**
+     * Gets all the registered users in the database
+     * 
+     * @return A list containing all registered users in the database
+     */
+    public static List<ActionLog> getAllLogs()
+    {
+        List<ActionLog> logs = new ArrayList<>();
+        
+        ResultSet results = DbManager.getResultSet(DatabaseTables.LOGS, 
+                null, "ANY");
+        
+        try
+        {
+            while (results.next())            
+            {
+                UserRoles userRole = UserRoles.valueOf(results.getString(
+                        "user_role"));
+                UserAccount userAccount = new UserAccount(results.getString(
+                        "username"), null, userRole, false);
+                
+                String dateTime = results.getString("date_time");
+                String message = results.getString("log_message");
+                
+                logs.add(new ActionLog(userAccount, message, dateTime));
+            }
+        } catch (SQLException ex)
+        {
+            System.err.println("SQL exception: " + ex.getMessage());
+        }
+        
+        return logs;
+    }
+    
+    /**
      * Writes an action log to the database
      * 
-     * @param userAccount User account the action was invoked from
-     * @param message Message to log for this action
+     * @param log The action log to add to the database
+     * @return Boolean indicating whether the log was added succesfully
      */
-    public static void log(final UserAccount userAccount, final String message)
+    public static boolean registerLog(ActionLog log)
     {
-        DbManager.add(new IStorable()
-        {
-            @Override
-            public String getUpdate()
-            {
-                return String.format("INSERT INTO %s (username, user_role, "
-                        + "date_time, log_message) VALUES ('%s', '%s', '%s', "
-                        + "'%s')", DatabaseTables.LOGS, 
-                        userAccount.getUsername(), userAccount.getUserRole(), 
-                        MiscUtil.getDateTimeString(), message);
-            }
-
-            @Override
-            public int getFieldLength()
-            {
-                return 4;
-            }
-
-            @Override
-            public DatabaseTables getTable()
-            {
-                return DatabaseTables.LOGS;
-            }
-
-        });
+        return DbManager.add(log);
     }
 }
