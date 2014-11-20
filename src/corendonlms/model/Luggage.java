@@ -26,7 +26,7 @@ public final class Luggage implements IStorable
      * @throws IllegalArgumentException
      */
     public Luggage(String color, String pattern, String brand, 
-            String passengerId, String weight, LuggageSize size)
+            String passengerId, String weight, LuggageSizes size)
             throws IllegalArgumentException
     {
         if (StringUtil.isStringNullOrWhiteSpace(brand) 

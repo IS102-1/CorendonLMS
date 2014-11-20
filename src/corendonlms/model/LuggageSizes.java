@@ -5,7 +5,7 @@ package corendonlms.model;
  * 
  * @author Emile
  */
-public enum LuggageSize
+public enum LuggageSizes
 {
     Small,
     Medium,

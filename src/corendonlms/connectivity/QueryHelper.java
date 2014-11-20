@@ -7,7 +7,7 @@ import corendonlms.model.Customer;
 import corendonlms.model.CustomerSearchModes;
 import corendonlms.model.DatabaseTables;
 import corendonlms.model.Luggage;
-import corendonlms.model.LuggageSize;
+import corendonlms.model.LuggageSizes;
 import corendonlms.model.UserAccount;
 import corendonlms.model.UserRoles;
 import java.sql.ResultSet;
@@ -192,6 +192,52 @@ public final class QueryHelper
 
         return !MiscUtil.isResultSetEmpty(results);
     }
+        
+    /**
+     * Gets all registered customers matching the query in the database
+     * 
+     * @param searchMode Indicates which column should be searched
+     * @param query String to search for
+     * @return Collection of customers matching the query
+     */
+    public static List<Customer> getCustomers(CustomerSearchModes searchMode, 
+            String query)
+    {
+        List<Customer> customers = new ArrayList<>();
+        
+        ResultSet results = DbManager.getResultSet(DatabaseTables.CUSTOMERS, 
+                query, searchMode.toString());
+        
+        try
+        {
+            while (results.next())            
+            {
+                String customerId = results.getString("customer_id");
+                String name = results.getString("name");
+                String address = results.getString("address");
+                String emailAddress = results.getString("email_address");
+                String phoneNumber = results.getString("phone_number");
+                
+                customers.add(new Customer(customerId, name, address, 
+                        emailAddress, phoneNumber));
+            }
+        } catch (SQLException ex)
+        {
+            System.err.println("SQL exception: " + ex.getMessage());
+        }
+        
+        return customers;
+    }
+    
+    /**
+     * Gets all the registered customers in the database
+     * 
+     * @return A list containing all registered customers in the database
+     */
+    public static List<Customer> getAllCustomers()
+    {
+        return getCustomers(CustomerSearchModes.ANY, null);
+    }
 
     /**
      * Registers a new customer and adds it to the database
@@ -229,7 +275,7 @@ public final class QueryHelper
      * @return Boolean indicating whether the luggage was added succesfully
      */
     public static boolean registerLuggage(String color, String pattern,
-            String brand, String passengerId, String weight, LuggageSize size)
+            String brand, String passengerId, String weight, LuggageSizes size)
     {
         Luggage luggage = new Luggage(color, pattern, brand, passengerId,
                 weight, size);

@@ -1,5 +1,6 @@
 package corendonlms.connectivity;
 
+import corendonlms.main.util.MiscUtil;
 import corendonlms.main.util.StringUtil;
 import corendonlms.model.DatabaseTables;
 import corendonlms.model.IStorable;
@@ -8,6 +9,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Maintains a connection to the application's database and acts as a pipeline
@@ -245,5 +248,25 @@ public final class DbManager
         }
 
         return count;
+    }
+    
+    public static String getLastEntry(DatabaseTables table, String column)
+    {
+        ResultSet results = getResultSet(table, null, "ANY");
+        
+        String lastEntry = null;
+        
+        try
+        {
+            while (results.next())
+            {
+                lastEntry = results.getString(column);
+            }
+        } catch (SQLException ex)
+        {
+            System.err.println("SQL exception: " + ex.getMessage());
+        }
+        
+        return lastEntry;
     }
 }

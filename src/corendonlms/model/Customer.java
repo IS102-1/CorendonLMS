@@ -1,8 +1,6 @@
 package corendonlms.model;
 
 import corendonlms.main.util.StringUtil;
-import corendonlms.model.DatabaseTables;
-import corendonlms.model.IStorable;
 
 /**
  * Represents a customer
@@ -13,7 +11,7 @@ public class Customer implements IStorable
 {
 
     private static final DatabaseTables TABLE = DatabaseTables.CUSTOMERS;
-    private final String name, address, emailAddress, phoneNumber;
+    private final String customerId, name, address, emailAddress, phoneNumber;
 
     /**
      * Initializes a new Customer object and sets their appropriate properties
@@ -22,9 +20,27 @@ public class Customer implements IStorable
      * @param address The customer's primary address line
      * @param emailAddress The customer's e-mail address
      * @param phoneNumber The customer's phone number
+     * @throws IllegalArgumentException
      */
-    public Customer(String name, String address,
-            String emailAddress, String phoneNumber)
+    public Customer(String name, String address, String emailAddress, 
+            String phoneNumber) throws IllegalArgumentException
+    {
+        this("-1", name, address, emailAddress, phoneNumber);
+    }
+    
+    /**
+     * Initializes a new Customer object and sets their appropriate properties
+     *
+     * @param customerId The customer's ID. Is only used for generating reports
+     * @param name The customer's full name
+     * @param address The customer's primary address line
+     * @param emailAddress The customer's e-mail address
+     * @param phoneNumber The customer's phone number
+     * @throws IllegalArgumentException
+     */
+    public Customer(String customerId, String name, String address, 
+            String emailAddress, String phoneNumber) 
+            throws IllegalArgumentException
     {
         if (StringUtil.isStringNullOrWhiteSpace(name)
                 || StringUtil.isStringNullOrWhiteSpace(address)
@@ -41,6 +57,7 @@ public class Customer implements IStorable
                     + "address is not valid.");
         }
 
+        this.customerId = customerId;
         this.name = name;
         this.address = address;
         this.emailAddress = emailAddress;
@@ -57,6 +74,16 @@ public class Customer implements IStorable
         return address;
     }
 
+    /**
+     * Get the value of customerId
+     *
+     * @return the value of customerId
+     */
+    public String getCustomerId()
+    {
+        return customerId;
+    }
+    
     /**
      * Get the value of emailAddress
      *
@@ -106,7 +133,8 @@ public class Customer implements IStorable
     {
         return String.format("INSERT INTO %s (name, address, email_address, "
                 + "phone_number) VALUES ('%s', '%s', '%s', '%s')",
-                TABLE, name, address, emailAddress, phoneNumber);
+                TABLE, name.trim(), address.trim(), 
+                emailAddress.trim(), phoneNumber.trim());
     }
 
     @Override

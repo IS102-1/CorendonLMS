@@ -1,9 +1,9 @@
 package corendonlms.view;
 
 import corendonlms.main.CorendonLMS;
+import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -20,7 +20,7 @@ public class PanelViewer extends JFrame
 
     private static final String PATH_SEPERATOR = File.separator;
     private static final String LOGO_FILENAME = "resources" + PATH_SEPERATOR + "CorendonLogo.png";
-    private static final ImageLabel CORENDON_LOGO = new ImageLabel(LOGO_FILENAME);
+    private static final ImageLabel LOGO = new ImageLabel(LOGO_FILENAME);
 
     /**
      * Initializes the frame and adds a window listener to dispose of the frame
@@ -31,11 +31,20 @@ public class PanelViewer extends JFrame
         //Set the frame's title and size
         super(CorendonLMS.APPLICATION_NAME);
 
+        initFrame();
+    }
+
+    private void initFrame()
+    {
+        Dimension frameSize = CorendonLMS.FRAME_SIZE;
+        
         setBackground(CorendonLMS.DEFAULT_BACKCOLOR);
-        setSize(CorendonLMS.FRAME_SIZE);
+        setMinimumSize(frameSize);
 
         //Center frame on screen
         setLocationRelativeTo(null);
+        
+        setLayout(new BorderLayout());
 
         //Listen for the frame's closing event, and
         //dispose of the frame when it is triggered
@@ -51,47 +60,37 @@ public class PanelViewer extends JFrame
                 }
         );
     }
+    
+    /**
+     * Closes the last panel shown
+     */
+    public void closeCurrentPanel()
+    {
+        if (CorendonLMS.currentUser != null)
+        {
+            /**
+             * TODO: Go back to hub
+             */
+            throw new UnsupportedOperationException("Not yet implemented");
+        }
+    }
 
     /**
-     * Displays a panel on the application's main frame
-     *
-     * @param panel The panel to display. Should derive of javax.swing.JPanel
+     * Displays a panel on the main frame
+     * 
+     * @param panel Panel to display
      */
     public void displayPanel(JPanel panel)
     {
         Container pane = getContentPane();
         pane.removeAll();
-
-        GridBagLayout gridBag = new GridBagLayout();
-
-        //Set up the constraints for docking 
-        //the image to the top of our frame
-        GridBagConstraints constraint = new GridBagConstraints();
-        constraint.fill = GridBagConstraints.BOTH;
-        constraint.weightx = 1;
-        constraint.weighty = 1;
         
-        ImageLabel logo = CORENDON_LOGO;
+        pane.add(LOGO, BorderLayout.NORTH);
+        pane.add(panel, BorderLayout.CENTER);
         
-        //Dock logo to top of the frame
-        constraint.gridy = 1;
-        constraint.anchor = GridBagConstraints.NORTH;
-        gridBag.setConstraints(logo, constraint);
-
-        //Dock panel to bottom of the frame
-        constraint.gridy = 2;
-        constraint.anchor = GridBagConstraints.SOUTH;
-        gridBag.setConstraints(panel, constraint);
-
-        pane.setLayout(gridBag);
-
-        pane.add(logo);
-        pane.add(panel);
-
         pane.revalidate();
         pane.repaint();
-
-        //Ensure the frame is visible
+        
         if (!isVisible())
         {
             setVisible(true);

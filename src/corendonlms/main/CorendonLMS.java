@@ -61,7 +61,7 @@ public class CorendonLMS
      * Keeps record of the current user, for purposes including permissions and
      * logging
      */
-    public static UserAccount currentUser;
+    public static UserAccount currentUser = null;
 
     /**
      * Gets the instance of the currently executing application

@@ -9,6 +9,7 @@ import corendonlms.model.UserAccount;
 import corendonlms.model.UserRoles;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,7 +22,6 @@ import javax.swing.JTextField;
  */
 public class Login extends JPanel implements ActionListener, ILoggable
 {
-
     private JTextField usernameTextField;
     private JPasswordField passwordField;
     private JButton loginButton;
@@ -51,7 +51,7 @@ public class Login extends JPanel implements ActionListener, ILoggable
         loginButton = new JButton("Log in");
         loginButton.addActionListener(this);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
 
         layout.setHorizontalGroup(
@@ -99,7 +99,8 @@ public class Login extends JPanel implements ActionListener, ILoggable
             //UserRoles role = UserManager.getUserRole(username, 
             //        passwordField.getPassword());
 
-            UserRoles role = QueryHelper.getUserRole(username, passwordField.getPassword());
+            UserRoles role = QueryHelper.getUserRole(username, 
+                    passwordField.getPassword());
             
             if (role != UserRoles.UNAUTHORIZED)
             {
@@ -108,15 +109,12 @@ public class Login extends JPanel implements ActionListener, ILoggable
                 QueryHelper.registerLog(new ActionLog(CorendonLMS.currentUser, 
                         "Signed in"));
                 
-                CorendonLMS.MAIN_PANEL.displayPanel(new ViewLogs());
-                
-                /**
-                 * TODO: Show next panel
-                 */
+                CorendonLMS.MAIN_PANEL.displayPanel(new Hub());
             }
             
             MiscUtil.showMessage(String.format("Signing in was %ssuccesful!\n"
-                    + "User role: %s", (role == UserRoles.UNAUTHORIZED ? "not " : ""), role));
+                    + "User role: %s", 
+                    (role == UserRoles.UNAUTHORIZED ? "not " : ""), role));
         }
     }
 

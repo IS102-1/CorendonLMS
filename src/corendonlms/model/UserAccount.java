@@ -71,7 +71,7 @@ public class UserAccount implements IStorable
     @Override
     public String toString()
     {
-        return String.format("Username: %s UserRole: %s", username, userRole);
+        return String.format("%s [%s]", username, userRole);
     }
 
     @Override
