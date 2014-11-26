@@ -28,8 +28,8 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="searchCustomerButton" max="32767" attributes="0"/>
-                          <Component id="logsButton" alignment="0" max="32767" attributes="0"/>
                           <Component id="searchLuggageButton" alignment="0" max="32767" attributes="0"/>
+                          <Component id="logsButton" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -37,6 +37,11 @@
                           <Component id="manageUsersButton" max="32767" attributes="0"/>
                           <Component id="registerCustomerButton" max="32767" attributes="0"/>
                       </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="exitButton" min="-2" pref="297" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="helpButton" min="-2" pref="297" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -68,7 +73,12 @@
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="signOutButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="111" max="32767" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="exitButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="helpButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="70" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -117,6 +127,16 @@
     <Component class="javax.swing.JButton" name="registerCustomerButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Register customer"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="exitButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Exit application"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="helpButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Help"/>
       </Properties>
     </Component>
   </SubComponents>

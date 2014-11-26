@@ -1,7 +1,11 @@
 package corendonlms.main;
 
+import corendonlms.connectivity.DbManager;
+import corendonlms.connectivity.QueryHelper;
 import corendonlms.main.util.MiscUtil;
+import corendonlms.model.DatabaseTables;
 import corendonlms.model.UserAccount;
+import corendonlms.model.UserRoles;
 import corendonlms.view.PanelViewer;
 import corendonlms.view.panels.Login;
 import java.awt.Color;
@@ -105,6 +109,8 @@ public class CorendonLMS
                         
                         fileStream.close();
                         errStream.close();
+                        
+                        DbManager.close();
                     } catch (IOException ex)
                     {
                     }

@@ -2,6 +2,7 @@ package corendonlms.view;
 
 import corendonlms.main.CorendonLMS;
 import java.awt.Color;
+import java.io.File;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -31,6 +32,9 @@ public class ImageLabel extends JPanel
         setBorder(BORDER);
         setOpaque(true);
         
-        add(new JLabel(new ImageIcon(fileName)));
+        if (new File(fileName).exists())
+        {
+            add(new JLabel(new ImageIcon(fileName)));
+        }
     }
 }

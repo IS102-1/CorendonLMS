@@ -44,7 +44,9 @@ public class UserAccount implements IStorable
     {
         this.username = username;
         this.password = hashPassword 
-                ? StringUtil.hashString(password, true) : password;
+                ? StringUtil.hashString(password, true) 
+                : password;
+        
         this.userRole = userRole;
     }
     

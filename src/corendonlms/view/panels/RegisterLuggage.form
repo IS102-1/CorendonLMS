@@ -29,17 +29,17 @@
               </Group>
               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
                       <Component id="cancelButton" min="-2" pref="110" max="-2" attributes="0"/>
-                      <EmptySpace pref="62" max="32767" attributes="0"/>
-                      <Component id="registerButton" min="-2" pref="110" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="registerButton" max="32767" attributes="0"/>
                   </Group>
                   <Component id="sizeComboBox" alignment="0" max="32767" attributes="0"/>
                   <Component id="patternField" alignment="0" max="32767" attributes="0"/>
                   <Component id="colorField" alignment="0" max="32767" attributes="0"/>
                   <Component id="weightField" alignment="0" max="32767" attributes="0"/>
                   <Component id="brandField" alignment="0" max="32767" attributes="0"/>
-                  <Component id="searchButton" alignment="0" max="32767" attributes="0"/>
+                  <Component id="searchButton" alignment="0" pref="282" max="32767" attributes="0"/>
                   <Component id="customerIdField" alignment="1" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>

@@ -6,7 +6,9 @@
 package corendonlms.view.panels;
 
 import corendonlms.main.CorendonLMS;
+import corendonlms.model.UserRoles;
 import corendonlms.view.PanelViewer;
+import corendonlms.view.panels.Search.SearchModes;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JPanel;
@@ -24,6 +26,7 @@ public class Hub extends JPanel implements ActionListener
     public Hub()
     {
         initComponents();
+        setPermissions();
 
         setBackground(CorendonLMS.DEFAULT_BACKCOLOR);
         usernameLabel.setText(String.format("Signed in as %s",
@@ -33,6 +36,15 @@ public class Hub extends JPanel implements ActionListener
         welcomeLabel.setForeground(CorendonLMS.DEFAULT_FORECOLOR);
         
         addListeners();
+    }
+    
+    private void setPermissions()
+    {
+        UserRoles role = CorendonLMS.currentUser.getUserRole();
+        
+        logsButton.setVisible(role == UserRoles.MANAGER 
+                || role == UserRoles.ADMIN);
+        manageUsersButton.setVisible(role == UserRoles.ADMIN);
     }
 
     private void addListeners()
@@ -54,7 +66,7 @@ public class Hub extends JPanel implements ActionListener
 
         if (source == searchCustomerButton)
         {
-            //New panel: search customers
+            mainPanel.displayPanel(new Search(SearchModes.CUSTOMERS));
         } else if (source == registerCustomerButton)
         {
             mainPanel.displayPanel(new RegisterCustomer());
@@ -62,6 +74,8 @@ public class Hub extends JPanel implements ActionListener
         {
             //Search luggage. Combine prompt with search customers,
             //but create seperate overview with PDF generation
+            
+            mainPanel.displayPanel(new Search(SearchModes.LUGGAGE));
         } else if (source == registerLuggageButton)
         {
             mainPanel.displayPanel(new RegisterLuggage());
@@ -70,7 +84,7 @@ public class Hub extends JPanel implements ActionListener
             mainPanel.displayPanel(new DataViewer());
         } else if (source == manageUsersButton)
         {
-            mainPanel.displayPanel(new UserManager());//new ManageUsers());
+            mainPanel.displayPanel(new UserManager());
         } else if (source == signOutButton)
         {
             CorendonLMS.currentUser = null;
@@ -97,6 +111,8 @@ public class Hub extends JPanel implements ActionListener
         manageUsersButton = new javax.swing.JButton();
         signOutButton = new javax.swing.JButton();
         registerCustomerButton = new javax.swing.JButton();
+        exitButton = new javax.swing.JButton();
+        helpButton = new javax.swing.JButton();
 
         welcomeLabel.setText("Welcome to CorendonLMS! What would you like to do?");
 
@@ -116,6 +132,10 @@ public class Hub extends JPanel implements ActionListener
 
         registerCustomerButton.setText("Register customer");
 
+        exitButton.setText("Exit application");
+
+        helpButton.setText("Help");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -131,13 +151,17 @@ public class Hub extends JPanel implements ActionListener
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(searchCustomerButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(logsButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(searchLuggageButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(searchLuggageButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(logsButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(80, 80, 80)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(registerLuggageButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(manageUsersButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(registerCustomerButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(registerCustomerButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(helpButton, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -161,12 +185,18 @@ public class Hub extends JPanel implements ActionListener
                     .addComponent(manageUsersButton))
                 .addGap(18, 18, 18)
                 .addComponent(signOutButton)
-                .addContainerGap(111, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(exitButton)
+                    .addComponent(helpButton))
+                .addContainerGap(70, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton exitButton;
+    private javax.swing.JButton helpButton;
     private javax.swing.JButton logsButton;
     private javax.swing.JButton manageUsersButton;
     private javax.swing.JButton registerCustomerButton;

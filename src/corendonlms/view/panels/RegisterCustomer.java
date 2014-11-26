@@ -8,6 +8,8 @@ import corendonlms.model.ActionLog;
 import corendonlms.model.ILoggable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  *
@@ -33,9 +35,13 @@ public class RegisterCustomer
         jLabel5.setForeground(CorendonLMS.DEFAULT_FORECOLOR);
         jLabel6.setForeground(CorendonLMS.DEFAULT_FORECOLOR);
         jLabel7.setForeground(CorendonLMS.DEFAULT_FORECOLOR);
+        invalidLabel.setForeground(CorendonLMS.DEFAULT_FORECOLOR);
+        invalidLabel.setVisible(false);
 
         cancelButton.addActionListener(this);
         registerButton.addActionListener(this);
+
+        addTextChangedListener();
     }
 
     /**
@@ -48,6 +54,28 @@ public class RegisterCustomer
         return !StringUtil.isStringNullOrWhiteSpace(phoneNumberField.getText())
                 && !StringUtil.isStringNullOrWhiteSpace(addressField.getText())
                 && !StringUtil.isStringNullOrWhiteSpace(surnameField.getText());
+    }
+    
+    private void addTextChangedListener()
+    {
+        emailAddressField.getDocument().addDocumentListener(new DocumentListener()
+        {
+
+            @Override
+            public void insertUpdate(DocumentEvent de) { checkValidity(); }
+
+            @Override
+            public void removeUpdate(DocumentEvent de) { checkValidity(); }
+
+            @Override
+            public void changedUpdate(DocumentEvent de) { checkValidity(); }
+
+            private void checkValidity()
+            {
+                String input = emailAddressField.getText();
+                invalidLabel.setVisible(!StringUtil.isValidEmailAddress(input));
+            }
+        });
     }
 
     @Override
@@ -63,26 +91,26 @@ public class RegisterCustomer
             if (isCompleteInput())
             {
                 boolean success = false;
-                String fullName = String.format("%s %s", 
-                            firstNameField.getText(), surnameField.getText());
+                String fullName = String.format("%s %s",
+                        firstNameField.getText(), surnameField.getText());
 
                 try
                 {
-                    success = QueryHelper.registerCustomer(fullName, 
-                            addressField.getText(), 
-                            emailAddressField.getText(), 
+                    success = QueryHelper.registerCustomer(fullName,
+                            addressField.getText(),
+                            emailAddressField.getText(),
                             phoneNumberField.getText());
                 } catch (IllegalArgumentException ex)
                 {
                     MiscUtil.showMessage("Could not register customer:\n"
                             + ex.getMessage());
                 }
-                
+
                 if (success)
                 {
                     log(String.format("Registered customer (%s)", fullName));
                 }
-                
+
                 MiscUtil.showMessage(String.format("The customer's registration"
                         + " was %ssuccesful!", (success ? "" : "not ")));
             } else
@@ -122,6 +150,7 @@ public class RegisterCustomer
         registerButton = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        invalidLabel = new javax.swing.JLabel();
 
         jLabel1.setText("First name");
 
@@ -142,6 +171,9 @@ public class RegisterCustomer
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel7.setText("Please verify the phone number's validity, as this is the preferred way of contact");
 
+        invalidLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        invalidLabel.setText("INVALID");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -152,7 +184,10 @@ public class RegisterCustomer
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel4)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(invalidLabel))
                             .addComponent(jLabel5)
                             .addComponent(jLabel2)
                             .addComponent(jLabel1)
@@ -166,8 +201,8 @@ public class RegisterCustomer
                             .addComponent(addressField, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(registerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(21, 21, 21)
+                                .addComponent(registerButton, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addGap(0, 22, Short.MAX_VALUE)))
@@ -191,7 +226,8 @@ public class RegisterCustomer
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(emailAddressField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel4)
+                    .addComponent(invalidLabel))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(phoneNumberField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -213,6 +249,7 @@ public class RegisterCustomer
     private javax.swing.JButton cancelButton;
     private javax.swing.JTextField emailAddressField;
     private javax.swing.JTextField firstNameField;
+    private javax.swing.JLabel invalidLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

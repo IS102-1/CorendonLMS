@@ -281,6 +281,15 @@ public final class QueryHelper
                 weight, size);
         return DbManager.add(luggage);
     }
+    
+    public static void update(DatabaseTables table, String idColumn, String id,
+            String alterColumn, String newValue)
+    {
+        String update = String.format("UPDATE %s SET %s='%s' WHERE %s='%s'",
+                table, alterColumn, newValue, idColumn, id);
+        
+        DbManager.executeUpdate(update);
+    }
 
     /**
      * Gets all the registered users in the database
