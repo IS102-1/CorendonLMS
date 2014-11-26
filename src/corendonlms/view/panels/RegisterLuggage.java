@@ -14,6 +14,7 @@ import corendonlms.model.ActionLog;
 import corendonlms.model.DatabaseTables;
 import corendonlms.model.ILoggable;
 import corendonlms.model.LuggageSizes;
+import corendonlms.view.panels.Search.SearchModes;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.DefaultComboBoxModel;
@@ -59,8 +60,8 @@ public class RegisterLuggage extends JPanel implements ActionListener, ILoggable
             CorendonLMS.MAIN_PANEL.displayPanel(new Hub());
         } else if (source == searchButton)
         {
-            //TODO: Implement behavior
-            throw new UnsupportedOperationException("Not implemened yet.");
+            CorendonLMS.MAIN_PANEL.displayPanel(
+                    new Search(SearchModes.CUSTOMERS));
         } else if (source == registerButton)
         {
             boolean success = false;

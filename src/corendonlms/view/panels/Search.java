@@ -1,9 +1,12 @@
 package corendonlms.view.panels;
 
+import corendonlms.connectivity.QueryHelper;
 import corendonlms.main.CorendonLMS;
 import corendonlms.main.util.MiscUtil;
 import corendonlms.main.util.StringUtil;
+import corendonlms.model.ActionLog;
 import corendonlms.model.DatabaseTables;
+import corendonlms.model.ILoggable;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,14 +17,17 @@ import javax.swing.JPanel;
  *
  * @author Emile
  */
-public class Search extends JPanel implements ActionListener
+public class Search extends JPanel implements ActionListener, ILoggable
 {
+
     public enum SearchModes
     {
 
         CUSTOMERS, LUGGAGE
     };
 
+    private SearchModes searchMode;
+    
     /**
      * Creates new form SearchCustomers
      *
@@ -29,6 +35,8 @@ public class Search extends JPanel implements ActionListener
      */
     public Search(SearchModes searchMode)
     {
+        this.searchMode = searchMode;
+        
         initComponents();
 
         int width = getWidth(), height = getHeight();
@@ -45,31 +53,40 @@ public class Search extends JPanel implements ActionListener
                 : DatabaseTables.LUGGAGE).getColumns();
 
         fieldComboBox.setModel(new DefaultComboBoxModel(fields));
-        
+
         backButton.addActionListener(this);
         searchButton.addActionListener(this);
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent evt)
     {
         Object source = evt.getSource();
-        
+
         if (source == backButton)
         {
             CorendonLMS.MAIN_PANEL.displayPanel(new Hub());
         } else if (source == searchButton)
         {
-            String text = queryTextField.getText();
-            
-            if (StringUtil.isStringNullOrWhiteSpace(text))
+            String query = queryTextField.getText();
+            String column = fieldComboBox.getSelectedItem().toString();
+
+            if (StringUtil.isStringNullOrWhiteSpace(query))
             {
                 MiscUtil.showMessage("The search query can not be empty.");
                 return;
             }
-            
+
+            log(String.format("Searched %s[%s] for \"%s\"", 
+                    searchMode, column, query));
             throw new UnsupportedOperationException("Not supported yet.");
         }
+    }
+
+    @Override
+    public void log(String message)
+    {
+        QueryHelper.registerLog(new ActionLog(CorendonLMS.currentUser, message));
     }
 
     /**

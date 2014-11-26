@@ -80,14 +80,14 @@ public class UserAccount implements IStorable
     public String getUpdate()
     {
         return String.format("INSERT INTO %s (username, password, user_role) "
-                + "VALUES ('%s', '%s', '%s')", getTable().toString(), username, password, 
-                userRole.toString().toLowerCase());
+                + "VALUES ('%s', '%s', '%s')", getTable().toString(), username, 
+                password, userRole.toString().toLowerCase());
     }
 
     @Override
     public int getFieldLength()
     {
-        return 3;
+        return 4;
     }
 
     @Override

@@ -36,7 +36,7 @@
                       <Component id="passwordField" alignment="1" min="-2" pref="178" max="-2" attributes="0"/>
                       <Component id="userRoleComboBox" alignment="1" min="-2" pref="178" max="-2" attributes="0"/>
                       <Component id="addUserButton" alignment="1" min="-2" pref="178" max="-2" attributes="0"/>
-                      <Component id="cancelButton" alignment="1" min="-2" pref="178" max="-2" attributes="0"/>
+                      <Component id="backButton" alignment="1" min="-2" pref="178" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
@@ -70,7 +70,7 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="addUserButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="53" max="32767" attributes="0"/>
-                      <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
+                      <Component id="backButton" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jScrollPane1" pref="0" max="32767" attributes="0"/>
               </Group>
@@ -111,9 +111,9 @@
         <Property name="text" type="java.lang.String" value="Add user account"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="cancelButton">
+    <Component class="javax.swing.JButton" name="backButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Cancel"/>
+        <Property name="text" type="java.lang.String" value="Back"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">

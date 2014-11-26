@@ -46,7 +46,7 @@ public class UserManager extends JPanel implements ActionListener, ILoggable
         initComponents();
         
         addUserButton.addActionListener(this);
-        cancelButton.addActionListener(this);
+        backButton.addActionListener(this);
         setBackground(CorendonLMS.DEFAULT_BACKCOLOR);
         
         //Remove UserRoles.UNAUTHORIZED from the options
@@ -147,7 +147,7 @@ public class UserManager extends JPanel implements ActionListener, ILoggable
                         + " or the entered credentials did not match the "
                         + "requirements.");
             }
-        } else if (source == cancelButton)
+        } else if (source == backButton)
         {
             CorendonLMS.MAIN_PANEL.displayPanel(new Hub());
         }
@@ -176,7 +176,7 @@ public class UserManager extends JPanel implements ActionListener, ILoggable
         passwordField = new javax.swing.JPasswordField();
         userRoleComboBox = new javax.swing.JComboBox();
         addUserButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
+        backButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         userTable = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
@@ -192,7 +192,7 @@ public class UserManager extends JPanel implements ActionListener, ILoggable
 
         addUserButton.setText("Add user account");
 
-        cancelButton.setText("Cancel");
+        backButton.setText("Back");
 
         userTable.setModel(new TableModel());
         jScrollPane1.setViewportView(userTable);
@@ -222,7 +222,7 @@ public class UserManager extends JPanel implements ActionListener, ILoggable
                         .addComponent(passwordField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(userRoleComboBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(addUserButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(cancelButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(backButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel6)
                     .addComponent(jLabel7))
                 .addContainerGap())
@@ -251,7 +251,7 @@ public class UserManager extends JPanel implements ActionListener, ILoggable
                         .addGap(18, 18, 18)
                         .addComponent(addUserButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
-                        .addComponent(cancelButton))
+                        .addComponent(backButton))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -260,7 +260,7 @@ public class UserManager extends JPanel implements ActionListener, ILoggable
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addUserButton;
-    private javax.swing.JButton cancelButton;
+    private javax.swing.JButton backButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

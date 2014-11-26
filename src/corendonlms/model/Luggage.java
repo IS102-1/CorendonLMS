@@ -125,7 +125,8 @@ public final class Luggage implements IStorable
     @Override
     public int getFieldLength()
     {
-        return 6;
+        //6 (7)
+        return TABLE.getColumnLength();
     }
 
     @Override

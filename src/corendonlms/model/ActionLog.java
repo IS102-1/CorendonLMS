@@ -80,7 +80,7 @@ public class ActionLog implements IStorable
     @Override
     public int getFieldLength()
     {
-        return 4;
+        return 5;
     }
 
     @Override

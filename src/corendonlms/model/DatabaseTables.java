@@ -12,23 +12,23 @@ public enum DatabaseTables
     
     CUSTOMERS("customers", new String[] 
     { 
-        "name", "address", "email_address", "phone_number" 
+        "customer_id", "name", "address", "email_address", "phone_number" 
     }),
     
     LUGGAGE("luggage", new String[]
     {
-        "color", "pattern", "brand", 
+        "luggage_id", "color", "pattern", "brand", 
         "passenger_id", "weight", "size" 
     }),
     
     USERS("users", new String[] 
     { 
-        "username", "password", "user_role"
+        "user_id", "username", "password", "user_role"
     }),
     
     LOGS("logs", new String[]
     {
-       "username", "user_role", "date_time", "log_message" 
+       "log_id", "username", "user_role", "date_time", "log_message" 
     });
 
     private final String tableName;

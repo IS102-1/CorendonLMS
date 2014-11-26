@@ -69,12 +69,12 @@ public final class StringUtil
      */
     public static String hashString(String input, boolean useSalt)
     {
-        String hash = hashString(input);
+        String hash = hashString(SALT + input);
         
-        if (useSalt)
-        {
-            hash = hashString(hash + SALT);
-        }
+//        if (useSalt)
+//        {
+//            hash = hashString(hash + SALT);
+//        }
         
         return hash;
     }

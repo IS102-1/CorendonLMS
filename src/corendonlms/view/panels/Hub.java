@@ -9,8 +9,11 @@ import corendonlms.main.CorendonLMS;
 import corendonlms.model.UserRoles;
 import corendonlms.view.PanelViewer;
 import corendonlms.view.panels.Search.SearchModes;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 /**
@@ -40,6 +43,12 @@ public class Hub extends JPanel implements ActionListener
     
     private void setPermissions()
     {
+        if (CorendonLMS.currentUser == null) 
+        {
+            CorendonLMS.MAIN_PANEL.displayPanel(new Login());
+            return;
+        }
+        
         UserRoles role = CorendonLMS.currentUser.getUserRole();
         
         logsButton.setVisible(role == UserRoles.MANAGER 
@@ -47,15 +56,19 @@ public class Hub extends JPanel implements ActionListener
         manageUsersButton.setVisible(role == UserRoles.ADMIN);
     }
 
+    /**
+     * Loops through all components on the panel and checks
+     * if they're a JButton. If so, adds an action listener
+     */
     private void addListeners()
     {
-        logsButton.addActionListener(this);
-        manageUsersButton.addActionListener(this);
-        registerCustomerButton.addActionListener(this);
-        registerLuggageButton.addActionListener(this);
-        searchCustomerButton.addActionListener(this);
-        searchLuggageButton.addActionListener(this);
-        signOutButton.addActionListener(this);
+        for (Component component : getComponents())
+        {
+            if (component instanceof JButton)
+            {
+                ((JButton) component).addActionListener(this);
+            }
+        }
     }
 
     @Override
@@ -89,6 +102,15 @@ public class Hub extends JPanel implements ActionListener
         {
             CorendonLMS.currentUser = null;
             mainPanel.displayPanel(new Login());
+        } else if (source == exitButton)
+        {
+            WindowEvent closingEvent = new WindowEvent(CorendonLMS.MAIN_PANEL, 
+                    WindowEvent.WINDOW_CLOSING);
+            
+            CorendonLMS.MAIN_PANEL.dispatchEvent(closingEvent);
+        } else if (source == helpButton)
+        {
+            throw new UnsupportedOperationException("Not yet implemented.");
         }
     }
 
